@@ -18,7 +18,8 @@ public class OrderDTO {
     private String shipDate;
     private String dateTime;
     private String status;
-    private boolean complete;
+    private Boolean complete;
+    private String createdAt;
     private List<ProductDTO> items;
 
 }
