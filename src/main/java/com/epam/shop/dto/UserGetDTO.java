@@ -6,13 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class UserDTO {
+public class UserGetDTO {
 
     private long id;
     private String userName;
@@ -21,6 +19,6 @@ public class UserDTO {
     private String email;
     private String password;
     private String phoneNumber;
-    private List<OrderDTO> orderDTOS;
+    private Long order_id;
 
 }
