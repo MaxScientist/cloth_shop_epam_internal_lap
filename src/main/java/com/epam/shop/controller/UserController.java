@@ -1,12 +1,12 @@
 package com.epam.shop.controller;
 
-import com.epam.shop.dto.DTOMapper;
+import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.dto.LoginDTO;
 import com.epam.shop.dto.UserGetDTO;
 import com.epam.shop.dto.UserPostDTO;
 import com.epam.shop.entity.User;
 import com.epam.shop.security.JwtTokenProvider;
-import com.epam.shop.service.impl.UserService;
+import com.epam.shop.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final DTOMapper<User, UserGetDTO> userGetMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;

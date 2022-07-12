@@ -5,10 +5,12 @@ logging:
 server:
   port: 8080
 spring:
-#  liquibase:
-#    url:  jdbc:oracle:thin:@//172.17.0.2:1521/ORCLPDB1
-#    user: prod_user
-#    password: My_admin878
+  liquibase:
+    url:  jdbc:oracle:thin:@//172.17.0.2:1521/ORCLPDB1
+    user: prod_user
+    password: My_admin878
+    enabled: true
+    change-log: liquibase/
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

@@ -2,12 +2,12 @@ package com.epam.shop.controller;
 
 
 import com.epam.shop.config.SwaggerConfig;
-import com.epam.shop.dto.DTOMapper;
+import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.dto.ProductDTO;
 import com.epam.shop.dto.VendorDTO;
 import com.epam.shop.entity.Product;
 import com.epam.shop.entity.Vendor;
-import com.epam.shop.service.impl.VendorService;
+import com.epam.shop.service.impl.VendorServiceImpl;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VendorController {
 
-    private final VendorService vendorService;
+    private final VendorServiceImpl vendorService;
     private final DTOMapper<Vendor, VendorDTO> vendorMapper;
     private final DTOMapper<Product, ProductDTO> productMapper;
 

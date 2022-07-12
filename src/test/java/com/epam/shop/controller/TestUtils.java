@@ -1,10 +1,9 @@
 package com.epam.shop.controller;
 
 import com.epam.shop.entity.Category;
-import com.epam.shop.service.impl.CategoryService;
-import com.epam.shop.service.impl.ProductService;
+import com.epam.shop.service.impl.CategoryServiceImpl;
+import com.epam.shop.service.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -15,11 +14,11 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class TestUtils {
 
-    private CategoryService _categoryService;
-    private ProductService _productService;
+    private CategoryServiceImpl _categoryService;
+    private ProductServiceImpl _productService;
 
-    private static CategoryService categoryService;
-    private static ProductService productService;
+    private static CategoryServiceImpl categoryService;
+    private static ProductServiceImpl productService;
 
 
     @PostConstruct

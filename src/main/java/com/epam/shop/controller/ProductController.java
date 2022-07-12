@@ -2,10 +2,10 @@ package com.epam.shop.controller;
 
 
 import com.epam.shop.config.SwaggerConfig;
-import com.epam.shop.dto.DTOMapper;
+import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.dto.ProductDTO;
 import com.epam.shop.entity.Product;
-import com.epam.shop.service.impl.ProductService;
+import com.epam.shop.service.impl.ProductServiceImpl;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
     private final DTOMapper<Product, ProductDTO> productMapper;
 
     @GetMapping

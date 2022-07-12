@@ -2,14 +2,14 @@ package com.epam.shop.service.impl;
 
 import com.epam.shop.entity.User;
 import com.epam.shop.repository.UserRepository;
-import com.epam.shop.service.GenericService;
+import com.epam.shop.service.GenericServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
 @Service
 @AllArgsConstructor
-public class UserService extends GenericService<User, Integer, UserRepository> {
+public class UserServiceImpl extends GenericServiceImpl<User, Integer, UserRepository> {
 
 
     public void updateById(int id, User user) {

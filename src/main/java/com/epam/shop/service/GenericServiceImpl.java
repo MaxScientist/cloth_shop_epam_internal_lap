@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 
-public abstract class GenericService<T, ID extends Serializable, R extends JpaRepository<T, ID>> {
+public abstract class GenericServiceImpl<T, ID extends Serializable, R extends JpaRepository<T, ID>> {
 
     @Autowired
     protected R r;

@@ -1,4 +1,4 @@
-package com.epam.shop.dto;
+package com.epam.shop.mapper;
 
 
 import org.springframework.stereotype.Service;

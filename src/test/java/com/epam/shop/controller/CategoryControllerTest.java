@@ -2,11 +2,11 @@ package com.epam.shop.controller;
 
 
 import com.epam.shop.dto.CategoryDTO;
-import com.epam.shop.dto.DTOMapper;
+import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.dto.ProductDTO;
 import com.epam.shop.entity.Category;
 import com.epam.shop.entity.Product;
-import com.epam.shop.service.impl.CategoryService;
+import com.epam.shop.service.impl.CategoryServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class CategoryControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
     private DTOMapper<Category, CategoryDTO> categoryMapper;
     private DTOMapper<Product, ProductDTO> productMapper;
 

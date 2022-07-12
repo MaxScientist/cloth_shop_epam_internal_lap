@@ -1,6 +1,7 @@
-package com.epam.shop.dto;
+package com.epam.shop.mapper;
 
 
+import com.epam.shop.dto.ProductDTO;
 import com.epam.shop.entity.Product;
 import org.mapstruct.Mapper;
 

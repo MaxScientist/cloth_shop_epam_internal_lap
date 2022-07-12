@@ -3,13 +3,13 @@ package com.epam.shop.service.impl;
 
 import com.epam.shop.entity.Product;
 import com.epam.shop.repository.ProductRepository;
-import com.epam.shop.service.GenericService;
+import com.epam.shop.service.GenericServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProductService extends GenericService<Product, Integer, ProductRepository> {
+public class ProductServiceImpl extends GenericServiceImpl<Product, Integer, ProductRepository> {
 
     public List<Product> findProductsByCategoryId(int id) {
         return super.r.findProductsByCategoryId(id);

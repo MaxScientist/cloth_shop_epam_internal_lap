@@ -4,7 +4,7 @@ import com.epam.shop.entity.Product;
 import com.epam.shop.entity.Vendor;
 import com.epam.shop.repository.ProductRepository;
 import com.epam.shop.repository.VendorRepository;
-import com.epam.shop.service.GenericService;
+import com.epam.shop.service.GenericServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class VendorService extends GenericService<Vendor, Integer, VendorRepository> {
+public class VendorServiceImpl extends GenericServiceImpl<Vendor, Integer, VendorRepository> {
 
     private ProductRepository productRepository;
 
