@@ -258,7 +258,7 @@
                 <column name="EMAIL" value="usern@mail.com"/>
                 <column name="FIRST_NAME" value="user"/>
                 <column name="LAST_NAME" value="user"/>
-                <column name="PASSWORD" value="user"/>
+                <column name="PASSWORD" value="$2a$12$fHnhQ5z0QSjjIOG1ukXkVenpihCKsF.EAcj/vf.hK94bqog47FQqK"/>
                 <column name="PHONE_NUMBER" value="87011234569"/>
                 <column name="USER_NAME" value="user"/>
                 <column name="ROLE_ID" value="2"/>
