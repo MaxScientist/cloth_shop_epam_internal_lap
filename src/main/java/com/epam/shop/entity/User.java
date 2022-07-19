@@ -18,7 +18,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     @Column(name = "user_name")
     private String username;
     @Column(name = "first_name")
@@ -35,6 +35,6 @@ public class User {
     private Role role;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "order_id")
     private List<Order> orders;
 }

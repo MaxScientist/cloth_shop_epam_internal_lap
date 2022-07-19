@@ -19,6 +19,11 @@ public class Product {
 
     private Integer quantity;
 
+    private byte[] photo;
+
+
+
     @Column(name = "category_id")
     private Integer categoryId;
+
 }

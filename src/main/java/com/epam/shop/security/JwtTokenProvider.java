@@ -13,7 +13,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
@@ -40,6 +44,7 @@ public class JwtTokenProvider {
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
+
 
     public String createToken(String userName, String role) {
         Claims claims = Jwts.claims().setSubject(userName);

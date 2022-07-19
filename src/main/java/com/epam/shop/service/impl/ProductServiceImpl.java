@@ -23,4 +23,10 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, Integer, Pro
         oldProduct.setCategoryId(product.getCategoryId());
         super.save(oldProduct);
     }
+
+    public void updatePhotoOfProduct(int id, byte[] photoBytes){
+        Product product = super.findById(id);
+        product.setPhoto(photoBytes);
+        super.save(product);
+    }
 }

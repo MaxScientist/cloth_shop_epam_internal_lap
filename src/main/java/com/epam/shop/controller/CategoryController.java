@@ -35,6 +35,7 @@ public class CategoryController {
 
     @GetMapping
     @ApiOperation(value = "Product Categories")
+    @PreAuthorize("WRITE")
     public ResponseEntity<Object> findAllCategories() {
         try {
             List<Category> categories = categoryService.findAll();

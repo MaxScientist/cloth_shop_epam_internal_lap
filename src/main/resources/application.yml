@@ -5,12 +5,16 @@ logging:
 server:
   port: 8080
 spring:
+  sql:
+    init:
+      mode: always
   liquibase:
     url:  jdbc:oracle:thin:@//172.17.0.2:1521/ORCLPDB1
     user: prod_user
     password: My_admin878
     enabled: true
-    change-log: liquibase/
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    change-log: classpath:liquibase/db.changelog-master.xml
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -18,7 +22,7 @@ spring:
     database: oracle
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.Oracle12cDialect
@@ -26,12 +30,13 @@ spring:
           lob:
             non_contextual_creation: true
     database-platform: org.hibernate.dialect.Oracle12cDialect
+    open-in-view: false
   datasource:
     url: jdbc:oracle:thin:@//172.17.0.2:1521/ORCLPDB1
     password: My_admin878
     driver-class-name: oracle.jdbc.driver.OracleDriver
     username: prod_user
 jwt:
-  secretKey: yektercesym
+  secretKey: mypSecretKey
   header: Authorization
   expiration: 86400

@@ -19,8 +19,8 @@ public class SwaggerConfig {
     public static final String CATEGORY = "category";
     public static final String ORDER = "order";
     public static final String PRODUCT = "product";
-    public static final String USER = "USER";
-    public static final String VENDOR = "VENDOR";
+    public static final String USER = "user";
+    public static final String VENDOR = "vendor";
 
     @Bean
     public Docket docket() {
@@ -30,9 +30,9 @@ public class SwaggerConfig {
                 .build()
                 .tags(new Tag(CATEGORY, "Categories of our products"))
                 .tags(new Tag(ORDER, "Access to orders"))
-                .tags(new Tag(PRODUCT, "Products"))
-                .tags(new Tag(USER, "USERS"))
-                .tags(new Tag(VENDOR, "VENDORS"));
+                .tags(new Tag(PRODUCT, "Products and all other stuff"))
+                .tags(new Tag(USER, "user base"))
+                .tags(new Tag(VENDOR, "vendors make a product"));
     }
 
     private ApiInfo apiInfo() {
