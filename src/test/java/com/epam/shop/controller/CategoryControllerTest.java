@@ -9,16 +9,16 @@ import com.epam.shop.entity.Product;
 import com.epam.shop.service.impl.CategoryServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static com.epam.shop.controller.TestUtils.populateCategories;
+import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,23 +26,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@SpringBootTest
+@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
-@RequiredArgsConstructor
 public class CategoryControllerTest {
 
-
+    @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
     private CategoryServiceImpl categoryService;
+
+
+    @Autowired
     private DTOMapper<Category, CategoryDTO> categoryMapper;
-    private DTOMapper<Product, ProductDTO> productMapper;
 
     @Test
     void findAllCategories() throws Exception {
-        populateCategories();
+        createCategories();
 
         List<Category> fromDB = categoryService.findAll();
 
@@ -58,6 +62,14 @@ public class CategoryControllerTest {
                 map(categoryMapper::fromDTO).collect(toList());
 
         assertEquals(fromDB.toString(), categories.toString());
+    }
+
+    private void createCategories() {
+        IntStream.range(0, 5).forEachOrdered(i -> {
+            Category category = new Category();
+            category.setName(i + " category");
+            categoryService.save(category);
+        });
     }
 
 
