@@ -130,7 +130,6 @@ public class VendorControllerTest {
 
         when(vendorService.save(vendor)).thenReturn(vendor);
         String requestBody = objectMapper.writeValueAsString(vendor);
-        VendorDTO vendorDTO = vendorMapper.toDTO(vendor);
         mockMvc.perform(put("/api/vendors/" + vendor.getId())
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON))
