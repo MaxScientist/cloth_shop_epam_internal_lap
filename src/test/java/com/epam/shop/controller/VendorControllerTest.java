@@ -10,7 +10,6 @@ import com.epam.shop.service.impl.VendorServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +25,6 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -183,14 +180,12 @@ public class VendorControllerTest {
                 .getContentAsString();
 
 
-        VendorDTO vendorDTO = objectMapper.readValue(httpResponse, new TypeReference<>() {});
-        List<ProductDTO> productList = vendorDTO.getProducts();
+        List<ProductDTO> productDTO = objectMapper.readValue(httpResponse, new TypeReference<>() {});
 
-
-        List<Product> productsFromDB = vendorService.findProductsByVendorId(vendorMapper.fromDTO(vendorDTO).getId());
+        List<Product> productsFromDB = vendorService.findProductsByVendorId(vendor.getId());
         List<ProductDTO> productDTOSFROMDB = productsFromDB.stream().map(p->productmapper.toDTO(p)).collect(toList());
 
-        assertEquals(productDTOSFROMDB.toString(), productList.toString());
+        assertEquals(productDTOSFROMDB.toString(), productDTO.toString());
     }
 
     private Product createProduct() {

@@ -45,48 +45,49 @@ public class VendorController {
     @PreAuthorize("hasAuthority('WRITE')")
     public ResponseEntity<?> saveVendor(@RequestBody VendorDTO vendorDTO) {
         try {
-            vendorService.save(vendorMapper.fromDTO(vendorDTO));
-            return new ResponseEntity<>(HttpStatus.OK);
+            Vendor vendor = vendorService.save(vendorMapper.fromDTO(vendorDTO));
+            VendorDTO vendorDTO1 = vendorMapper.toDTO(vendor);
+            return new ResponseEntity<>(vendorDTO1, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<VendorDTO> findVendorById(@PathVariable("id") int id) {
+    public ResponseEntity<?> findVendorById(@PathVariable("id") int id) {
         try {
             Vendor vendor = vendorService.findById(id);
             return new ResponseEntity<>(vendorMapper.toDTO(vendor), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping
+    @PutMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('WRITE')")
-    public ResponseEntity updateVendorById(@PathVariable("id") int id, @RequestBody VendorDTO vendorDTO) {
+    public ResponseEntity<?> updateVendorById(@PathVariable("id") int id, @RequestBody VendorDTO vendorDTO) {
         try {
             vendorService.updateVendorById(id, vendorMapper.fromDTO(vendorDTO));
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
     }
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('WRITE')")
-    public ResponseEntity deleteVendorById(@PathVariable("id") int id) {
+    public ResponseEntity<?> deleteVendorById(@PathVariable("id") int id) {
         try {
             vendorService.deleteById(id);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(value = "/{id}/products")
     @PreAuthorize("hasAuthority('WRITE')")
-    public ResponseEntity<List<ProductDTO>> findProductsByVendorId(@PathVariable("id") int id) {
+    public ResponseEntity<?> findProductsByVendorId(@PathVariable("id") int id) {
         try {
             List<Product> products = vendorService.findProductsByVendorId(id);
             List<ProductDTO> productDTOS = products.stream().map(productMapper::toDTO)
@@ -94,17 +95,17 @@ public class VendorController {
 
             return new ResponseEntity<>(productDTOS, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping(value = "/{id}/products")
-    public ResponseEntity<Product> saveProductToVendor(@PathVariable("id") int id, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<?> saveProductToVendor(@PathVariable("id") int id, @RequestBody ProductDTO productDTO) {
         try {
             vendorService.saveProductToVendor(id, productMapper.fromDTO(productDTO));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
