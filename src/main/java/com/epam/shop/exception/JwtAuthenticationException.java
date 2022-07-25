@@ -1,4 +1,4 @@
-package com.epam.shop.security;
+package com.epam.shop.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

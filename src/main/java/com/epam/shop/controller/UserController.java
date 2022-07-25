@@ -1,8 +1,8 @@
 package com.epam.shop.controller;
 
 import com.epam.shop.config.SwaggerConfig;
-import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.dto.LoginDTO;
+import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.dto.UserGetDTO;
 import com.epam.shop.dto.UserPostDTO;
 import com.epam.shop.entity.User;
@@ -57,7 +57,7 @@ public class UserController {
     public ResponseEntity<String> saveUser(@RequestBody UserPostDTO userPostDTO) {
         try {
             userService.save(userPostMapper.fromDTO(userPostDTO));
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

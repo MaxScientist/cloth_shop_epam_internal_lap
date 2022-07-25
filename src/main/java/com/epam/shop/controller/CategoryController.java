@@ -53,7 +53,7 @@ public class CategoryController {
         try {
             Category category = categoryMapper.fromDTO(categoryDTO);
             CategoryDTO result = categoryMapper.toDTO(categoryService.save(category));
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

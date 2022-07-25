@@ -30,25 +30,25 @@ public class VendorController {
     private final DTOMapper<Product, ProductDTO> productMapper;
 
     @GetMapping
-    public ResponseEntity<List<VendorDTO>> findAllVendors() {
+    public ResponseEntity<?> findAllVendors() {
         try {
             List<Vendor> vendors = vendorService.findAll();
             List<VendorDTO> vendorDTOS = vendors.stream()
                     .map(vendorMapper::toDTO).collect(Collectors.toList());
             return new ResponseEntity<>(vendorDTOS, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('WRITE')")
-    public ResponseEntity<Vendor> saveVendor(@RequestBody VendorDTO vendorDTO) {
+    public ResponseEntity<?> saveVendor(@RequestBody VendorDTO vendorDTO) {
         try {
             vendorService.save(vendorMapper.fromDTO(vendorDTO));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
