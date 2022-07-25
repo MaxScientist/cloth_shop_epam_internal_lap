@@ -1,13 +1,16 @@
 package com.epam.shop.controller;
 
 
+import com.epam.shop.dto.ProductDTO;
 import com.epam.shop.dto.VendorDTO;
+import com.epam.shop.entity.Product;
 import com.epam.shop.entity.Vendor;
 import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.service.impl.VendorServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -37,6 +42,8 @@ public class VendorControllerTest {
 
     private static final String VENDOR_NAME = "1st Vendor";
     private static final Integer VENDOR_ID = 1;
+    private static final int PRODUCT_ID = 1;
+    private static final Integer CATEGORY_ID = 1;
 
 
     @MockBean
@@ -50,6 +57,9 @@ public class VendorControllerTest {
 
     @Autowired
     private DTOMapper<Vendor, VendorDTO> vendorMapper;
+
+    @Autowired
+    private DTOMapper<Product, ProductDTO> productmapper;
 
     @Test
     void getAllVendors() throws Exception {
@@ -139,7 +149,7 @@ public class VendorControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        Mockito.verify(vendorService, times(1)).updateVendorById(VENDOR_ID,vendor);
+        Mockito.verify(vendorService, times(1)).updateVendorById(VENDOR_ID, vendor);
     }
 
     @Test
@@ -155,6 +165,40 @@ public class VendorControllerTest {
         Mockito.verify(vendorService, times(1)).deleteById(VENDOR_ID);
     }
 
+    @Test
+    void getProductsByVendor() throws Exception {
+        Product product = createProduct();
+        Vendor vendor = new Vendor();
+        fillVendorObjectWithData(vendor);
+        List<Product> products = List.of(product);
+        vendor.setProducts(products);
+
+        when(vendorService.findProductsByVendorId(PRODUCT_ID)).thenReturn(products);
+
+        String httpResponse = mockMvc.perform(get("/api/vendors/" + vendor.getId() + "/products"))
+                .andDo(print())
+                .andExpect(status().isOk()
+                ).andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        VendorDTO vendorDTO = objectMapper.readValue(httpResponse, new TypeReference<>() {});
+        List<ProductDTO> productList = vendorDTO.getProducts();
+
+
+        List<Product> productsFromDB = vendorService.findProductsByVendorId(vendorMapper.fromDTO(vendorDTO).getId());
+        List<ProductDTO> productDTOSFROMDB = productsFromDB.stream().map(p->productmapper.toDTO(p)).collect(toList());
+
+        assertEquals(productDTOSFROMDB.toString(), productList.toString());
+    }
+
+    private Product createProduct() {
+        Product product = new Product();
+        product.setId(PRODUCT_ID);
+        product.setCategoryId(CATEGORY_ID);
+        return product;
+    }
 
 
     private void fillVendorObjectWithData(Vendor vendor) {
