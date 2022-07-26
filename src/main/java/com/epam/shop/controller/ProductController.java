@@ -28,25 +28,25 @@ public class ProductController {
     private final DTOMapper<Product, ProductDTO> productMapper;
 
     @GetMapping
-    public ResponseEntity findAllProducts() {
+    public ResponseEntity<?> findAllProducts() {
         try {
             List<Product> products = productService.findAll();
             List<ProductDTO> productDTOS = products.stream().map(productMapper::toDTO)
                     .collect(Collectors.toList());
-            return new ResponseEntity(productDTOS, HttpStatus.OK);
+            return new ResponseEntity<>(productDTOS, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @PostMapping
-    public ResponseEntity saveProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<?> saveProduct(@RequestBody ProductDTO productDTO) {
         try {
             Product product = productService.save(productMapper.fromDTO(productDTO));
-            return new ResponseEntity(productMapper.toDTO(product), HttpStatus.OK);
+            return new ResponseEntity<>(productMapper.toDTO(product), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

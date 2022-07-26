@@ -1,10 +1,7 @@
 package com.epam.shop.entity;
 
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 @Table(name = "users")
+@EqualsAndHashCode
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +23,7 @@ public class User {
     private String password;
     private String phoneNumber;
 
-    @ManyToOne(cascade =  CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToOne(cascade =  CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

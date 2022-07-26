@@ -47,7 +47,8 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/users/login").permitAll()
+                .authorizeRequests()
+//                antMatchers("/api/users/login").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and().apply(jwtConfig);

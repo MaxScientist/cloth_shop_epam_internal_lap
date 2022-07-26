@@ -1,6 +1,7 @@
 package com.epam.shop.controller;
 
 import com.epam.shop.config.SwaggerConfig;
+import com.epam.shop.dto.CategoryDTO;
 import com.epam.shop.dto.LoginDTO;
 import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.dto.UserGetDTO;
@@ -54,10 +55,14 @@ public class UserController {
     }
 
     @PostMapping(path = "/users", consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> saveUser(@RequestBody UserPostDTO userPostDTO) {
+    public ResponseEntity<?> saveUser(@RequestBody UserPostDTO userPostDTO) {
         try {
-            userService.save(userPostMapper.fromDTO(userPostDTO));
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            User user = userPostMapper.fromDTO(userPostDTO);
+            UserGetDTO result = userGetMapper.toDTO(userService.save(user));
+//            User result = (userService.save(userPostMapper.fromDTO(userPostDTO)));
+
+
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
