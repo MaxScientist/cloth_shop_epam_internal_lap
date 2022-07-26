@@ -2,19 +2,20 @@ package com.epam.shop.controller;
 
 
 import com.epam.shop.dto.LoginDTO;
+import com.epam.shop.dto.UserGetDTO;
 import com.epam.shop.dto.UserPostDTO;
-import com.epam.shop.entity.Permission;
 import com.epam.shop.entity.Role;
 import com.epam.shop.entity.User;
 import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.mapper.UserGetMapper;
+import com.epam.shop.repository.RoleRepository;
 import com.epam.shop.repository.UserRepository;
 import com.epam.shop.security.JwtTokenProvider;
 import com.epam.shop.security.UserDetailsImpl;
 import com.epam.shop.service.impl.UserServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import lombok.RequiredArgsConstructor;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,29 +23,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Transactional
+@WithMockUser
 public class UserControllerTest {
     private static final int ORDER_ID = 1;
-    private static Integer USER_ID = 3;
+    private static final Integer USER_ID = 3;
 
     @MockBean
     UserServiceImpl userService;
@@ -59,6 +67,10 @@ public class UserControllerTest {
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private DTOMapper<User, UserPostDTO> userPostMapper;
+
+    @Autowired
+    private DTOMapper<User, UserGetDTO> userGetDTO;
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -84,17 +96,26 @@ public class UserControllerTest {
 
     @Test
     void createUser() throws Exception {
-        UserPostDTO userPostDTO = new UserPostDTO();
+        UserPostDTO userPostDTO = userPostDTO();
 
-        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json = objectWriter.writeValueAsString(userPostDTO);
+//        User userToSave = userPostMapper.fromDTO(userPostDTO);
+        String requestBody = objectMapper.writeValueAsString(userPostDTO);
 
-        this.mockMvc.perform(post("/api/users/users")
-                        .content(json)
+        String httpResponse = mockMvc.perform(post("/api/users/users")
+                        .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
-        verify(userService, times(1)).save(userPostMapper.fromDTO(userPostDTO));
+        UserGetDTO userGetDTO = objectMapper.readValue(httpResponse, new TypeReference<>() {
+        });
+        User user = this.userGetDTO.fromDTO(userGetDTO);
+        User fromDB = userService.findById(user.getId());
+        assertEquals(fromDB.toString(), user.toString());
+//        verify(userService, times(1)).save(userToSave);
     }
 
 
@@ -142,35 +163,20 @@ public class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Test
     void login() throws Exception {
         LoginDTO loginDTO = createUserPost();
 
+
         User user = new User();
         user.setUsername("test");
-//        Role role = new Role();
-//        role.setRoleType("USER");
-//        Permission permission = new Permission();
-//        permission.setName("WRITE");
-//        Set<Permission> permissions = new HashSet<>();
-//        permissions.add(permission);
-//        role.setPermission(permissions);
-        user.setFirstname("firstName");
-        user.setLastname("lastName");
-        user.setPhoneNumber("87051256932");
-        user.setPassword("test");
-//        user.setRole(role);
-        userService.save(user);
+
 
         String json = objectMapper.writeValueAsString(loginDTO);
         User userCheck = loginCheckUser(loginDTO);
-        String token = jwtTokenProvider.createToken(loginDTO.getUsername(), userCheck.getRole().getRoleType());
-
-//        Map<Object, Object> response = new HashMap<>();
-//        response.put("username", loginDTO.getUsername());
-//        response.put("token", token);
-//        response.put("permission", userCheck.getRole().getPermission());
-
         Mockito.when(userCheck).thenReturn(user);
 
         this.mockMvc.perform(post("/api/users/login")
@@ -185,7 +191,7 @@ public class UserControllerTest {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-//        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
 
         User userCheck = userRepository.findByUsername(loginDTO.getUsername());
@@ -206,6 +212,28 @@ public class UserControllerTest {
         loginDTO.setUsername("test");
         loginDTO.setPassword("test");
         return loginDTO;
+    }
+
+    private UserPostDTO userPostDTO() {
+        Optional<Role> optionalUserRole = roleRepository.findAll().stream().filter(roleType -> roleType.getRoleType().equals("USER")).findFirst();
+        Role userRole = optionalUserRole.orElse(null);
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setId(3);
+        userPostDTO.setUsername("test");
+//        Permission permission = new Permission();
+//        permission.setName("WRITE");
+//        Set<Permission> permissions = new HashSet<>();
+//        permissions.add(permission);
+//        role.setPermission(permissions);
+//        userPostDTO.setFirstname("firstName");
+//        userPostDTO.setLastname("lastName");
+//        userPostDTO.setPhoneNumber("87051256932");
+//        userPostDTO.setPassword("test");
+//        userPostDTO.setEmail("userTest@mail.com");
+//        userPostDTO.setRole(userRole);
+//        userPostDTO.setOrders(new ArrayList<>());
+        return userPostDTO;
     }
 
     private User createUserObject() {
