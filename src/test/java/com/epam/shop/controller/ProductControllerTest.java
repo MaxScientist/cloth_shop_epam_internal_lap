@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 
 import static com.epam.shop.controller.TestUtils.createProduct;
 import static com.epam.shop.controller.TestUtils.createProducts;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -68,7 +69,7 @@ public class ProductControllerTest {
     void saveProduct() throws Exception {
         Product product = createProduct();
 
-        String requestBody = objectMapper.writeValueAsString(product);
+        String requestBody = objectMapper.writeValueAsString(productMapper.toDTO(product));
 
         String httpResponse = mockMvc.perform(post("/api/products")
                         .content(requestBody)
@@ -84,10 +85,9 @@ public class ProductControllerTest {
         });
         Product productFromDTO = productMapper.fromDTO(productDTO);
 
-        //Set the id to initial version of product object
-        product.setId(productFromDTO.getId());
+        Product productFromDb = productService.findById(productFromDTO.getId());
 
-        assertEquals(product.toString(), productFromDTO.toString());
+        assertEquals(productFromDb, productFromDTO);
     }
 
     @Test
@@ -117,9 +117,9 @@ public class ProductControllerTest {
         productToSave.setProductName("new_updated_name");
         String requestBody = objectMapper.writeValueAsString(productMapper.toDTO(productToSave));
 
-        this.mockMvc.perform(put("/api/products/"+productFromDB.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
+        this.mockMvc.perform(put("/api/products/" + productFromDB.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -133,7 +133,7 @@ public class ProductControllerTest {
         Product productToSave = createProduct();
         Product savedProduct = productService.save(productToSave);
 
-        this.mockMvc.perform(delete("/api/products/"+savedProduct.getId()))
+        this.mockMvc.perform(delete("/api/products/" + savedProduct.getId()))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -151,13 +151,10 @@ public class ProductControllerTest {
 
         String requestBody = objectMapper.writeValueAsString(photoBytes);
 
-        String httpResponse = this.mockMvc.perform(put("/api/products/"+savedProduct.getId()+"/photo")
-                .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        this.mockMvc.perform(put("/api/products/" + savedProduct.getId() + "/photo")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
         Product checkFromDB = productService.findById(savedProduct.getId());
 
@@ -173,7 +170,7 @@ public class ProductControllerTest {
 
         Product savedProduct = productService.save(product);
 
-        String httpResponse = this.mockMvc.perform(get("/api/products/"+savedProduct.getId()+"/photo"))
+        String httpResponse = this.mockMvc.perform(get("/api/products/" + savedProduct.getId() + "/photo"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()

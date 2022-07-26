@@ -58,11 +58,9 @@ public class UserController {
     public ResponseEntity<?> saveUser(@RequestBody UserPostDTO userPostDTO) {
         try {
             User user = userPostMapper.fromDTO(userPostDTO);
-            UserGetDTO result = userGetMapper.toDTO(userService.save(user));
-//            User result = (userService.save(userPostMapper.fromDTO(userPostDTO)));
+            userService.save(user);
 
-
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -136,5 +134,5 @@ public class UserController {
         }
     }
 
-    
+
 }

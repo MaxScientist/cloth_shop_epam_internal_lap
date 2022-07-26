@@ -15,9 +15,10 @@ import java.util.stream.IntStream;
 
 @Component
 public class TestUtils {
-    private static final int PRODUCT_ID = 1;
+
     @Autowired
     private CategoryServiceImpl _categoryService;
+
     @Autowired
     private ProductServiceImpl _productService;
 
