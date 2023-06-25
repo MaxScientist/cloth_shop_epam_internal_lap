@@ -1,6 +1,5 @@
 package com.epam.shop.security;
 
-
 import com.epam.shop.entity.Permission;
 import com.epam.shop.entity.Role;
 import lombok.Data;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 @Data
 public class UserDetailsImpl implements UserDetails {

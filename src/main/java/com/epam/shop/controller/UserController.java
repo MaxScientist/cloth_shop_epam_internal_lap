@@ -1,7 +1,6 @@
 package com.epam.shop.controller;
 
 import com.epam.shop.config.SwaggerConfig;
-import com.epam.shop.dto.CategoryDTO;
 import com.epam.shop.dto.LoginDTO;
 import com.epam.shop.mapper.DTOMapper;
 import com.epam.shop.dto.UserGetDTO;

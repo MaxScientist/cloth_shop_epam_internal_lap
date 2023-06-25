@@ -2,8 +2,6 @@ package com.epam.shop.security;
 
 import com.epam.shop.entity.User;
 import com.epam.shop.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

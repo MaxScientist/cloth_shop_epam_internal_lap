@@ -2,9 +2,8 @@ package com.epam.shop.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.ManyToAny;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Entity
